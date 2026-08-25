@@ -1,0 +1,12 @@
+:root { --bg:#10140f; --card:#1b221a; --ink:#eef6ea; --muted:#8eaa8a; --line:#2d3a2b; --acc:#6dbf6a; }
+* { box-sizing: border-box; }
+body { margin:0; font: 16px/1.5 ui-sans-serif, system-ui, sans-serif; background:var(--bg); color:var(--ink); }
+header, main, footer { max-width: 920px; margin: 0 auto; padding: 1.25rem 1rem; }
+h1 { font-size: 1.8rem; margin: .6rem 0 .35rem; }
+.lede, footer, .muted { color: var(--muted); }
+.grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:.75rem; margin: 1.25rem 0 2rem; }
+.card { display:block; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:1rem; color:var(--ink); text-decoration:none; }
+.soon { opacity:.55; }
+.card h2 { font-size:1.05rem; margin:0 0 .35rem; }
+.card p { margin:0; color:var(--muted); font-size:.9rem; }
+footer { font-size: .85rem; border-top:1px solid var(--line); }

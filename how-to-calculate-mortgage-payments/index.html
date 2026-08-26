@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Calculate Mortgage Payments — Formula &amp; Calculator</title>
+  <meta name="description" content="How to calculate mortgage payments with the standard amortization formula. Enter price, down payment, rate, and term. Principal and interest only. Runs in your browser.">
+  <link rel="canonical" href="https://plain-finance.github.io/how-to-calculate-mortgage-payments/">
+  <link rel="stylesheet" href="../assets/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What formula is used to calculate mortgage payments?",
+        "acceptedAnswer": {"@type": "Answer", "text": "The standard amortization formula is M = P × r(1+r)^n / ((1+r)^n − 1). P is principal, r is the monthly rate (annual rate divided by 12 then by 100), and n is the number of months (years × 12). If the rate is 0%, M is P divided by n."}
+      },
+      {
+        "@type": "Question",
+        "name": "What is not included in this monthly payment?",
+        "acceptedAnswer": {"@type": "Answer", "text": "This is principal and interest only. It does not include property taxes, homeowners insurance, HOA dues, or PMI. Those extra costs are often escrowed with a real mortgage payment."}
+      },
+      {
+        "@type": "Question",
+        "name": "Is mortgage interest compounded monthly in this calculator?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes. The annual rate is converted to a monthly rate and applied once per month, which is the usual fixed-rate amortization schedule. It is not daily compounding and not a quoted APR with fees."}
+      },
+      {
+        "@type": "Question",
+        "name": "How does an extra monthly payment shorten the loan?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Any extra amount above the scheduled principal-and-interest payment goes to principal. That lowers the balance faster, so fewer months of interest accrue. This page reports months saved versus the original term."}
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need an account or upload anything?",
+        "acceptedAnswer": {"@type": "Answer", "text": "No. The calculator runs in your browser with JavaScript. Nothing is uploaded and there is no account."}
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../">Plain Finance</a>
+    </nav>
+    <h1>How to Calculate Mortgage Payments</h1>
+    <p class="lede">Use the amortization formula in your browser. Principal and interest only. Nothing is uploaded.</p>
+  </header>
+  <main>
+    <p class="example-label">EXAMPLE inputs — $400,000 price, 20% down, 6.5% annual, 30 years. Not a current market rate.</p>
+    <form id="calc" novalidate>
+      <div class="fields">
+        <label class="field stacked">Home price
+          <input id="price" name="price" type="number" min="0" step="1" value="400000" inputmode="decimal">
+        </label>
+        <label class="field stacked">Down payment amount
+          <input id="downAmount" name="downAmount" type="number" min="0" step="1" value="80000" inputmode="decimal">
+        </label>
+        <label class="field stacked">Down payment percent
+          <input id="downPercent" name="downPercent" type="number" min="0" max="100" step="0.01" value="20" inputmode="decimal">
+        </label>
+        <label class="field stacked">Principal (derived)
+          <input id="principal" name="principal" type="number" min="0" step="1" value="320000" inputmode="decimal">
+        </label>
+        <label class="field stacked">Annual interest rate %
+          <input id="rate" name="rate" type="number" min="0" step="0.001" value="6.5" inputmode="decimal">
+        </label>
+        <label class="field stacked">Term (years)
+          <input id="years" name="years" type="number" min="1" max="50" step="1" value="30" inputmode="numeric">
+        </label>
+        <label class="field stacked">Extra monthly payment (optional)
+          <input id="extra" name="extra" type="number" min="0" step="1" value="0" inputmode="decimal">
+        </label>
+      </div>
+      <div class="toolbar">
+        <button class="primary" type="submit">Calculate</button>
+        <button type="button" id="reset">Reset example</button>
+      </div>
+    </form>
+    <p class="status" id="status">EXAMPLE loaded. Calculate to see principal and interest.</p>
+    <div class="results" id="results" hidden>
+      <div class="card">
+        <p>Monthly principal + interest</p>
+        <strong id="outMonthly">—</strong>
+      </div>
+      <div class="card">
+        <p>Total paid</p>
+        <strong id="outTotal">—</strong>
+      </div>
+      <div class="card">
+        <p>Total interest</p>
+        <strong id="outInterest">—</strong>
+      </div>
+      <div class="card" id="savedCard" hidden>
+        <p>Months saved with extra payment</p>
+        <strong id="outSaved">—</strong>
+      </div>
+    </div>
+    <section>
+      <h2>The formula</h2>
+      <div class="formula">
+        <p class="eq">M = P × r(1+r)<sup>n</sup> / ((1+r)<sup>n</sup> − 1)</p>
+        <p>M is the monthly principal-and-interest payment. P is the loan principal (home price minus down payment). r is the monthly rate: annual interest rate divided by 12, then divided by 100. n is the number of monthly payments: term in years times 12.</p>
+        <p>If the annual rate is 0%, there is no interest, so M is simply P divided by n.</p>
+        <p>EXAMPLE: a $400,000 price with $80,000 down leaves $320,000 of principal. At 6.5% annual for 30 years, r is 6.5 ÷ 12 ÷ 100 and n is 360. That scheduled payment is about $2,022 a month of principal and interest.</p>
+      </div>
+    </section>
+    <section>
+      <h2>How to calculate it</h2>
+      <ol>
+        <li>Subtract the down payment from the home price to get principal P.</li>
+        <li>Convert the annual rate to a monthly decimal r (divide by 12, then by 100).</li>
+        <li>Multiply years by 12 to get n, the payment count.</li>
+        <li>Plug P, r, and n into the formula for M. That is principal and interest only.</li>
+      </ol>
+      <p class="disclaimer">Educational estimate of principal and interest only. Does not include property taxes, homeowners insurance, HOA dues, or PMI. Not financial advice. Defaults are labeled EXAMPLE and are not a quoted market rate.</p>
+    </section>
+    <section class="faq">
+      <h2>FAQ</h2>
+      <details>
+        <summary>What formula is used to calculate mortgage payments?</summary>
+        <p>The standard amortization formula is M = P × r(1+r)^n / ((1+r)^n − 1). P is principal, r is the monthly rate (annual rate divided by 12 then by 100), and n is the number of months (years × 12). If the rate is 0%, M is P divided by n.</p>
+      </details>
+      <details>
+        <summary>What is not included in this monthly payment?</summary>
+        <p>This is principal and interest only. It does not include property taxes, homeowners insurance, HOA dues, or PMI. Those extra costs are often escrowed with a real mortgage payment.</p>
+      </details>
+      <details>
+        <summary>Is mortgage interest compounded monthly in this calculator?</summary>
+        <p>Yes. The annual rate is converted to a monthly rate and applied once per month, which is the usual fixed-rate amortization schedule. It is not daily compounding and not a quoted APR with fees.</p>
+      </details>
+      <details>
+        <summary>How does an extra monthly payment shorten the loan?</summary>
+        <p>Any extra amount above the scheduled principal-and-interest payment goes to principal. That lowers the balance faster, so fewer months of interest accrue. This page reports months saved versus the original term.</p>
+      </details>
+      <details>
+        <summary>Do I need an account or upload anything?</summary>
+        <p>No. The calculator runs in your browser with JavaScript. Nothing is uploaded and there is no account.</p>
+      </details>
+    </section>
+  </main>
+  <footer>
+    <p><a href="../">Home</a> · Plain Finance · calculators only</p>
+    <p class="queued">Queued (not live yet): Mortgage Calculator UAE · Loan Against Property EMI Calculator · Home Loan Balance Transfer Calculator · SIP Calculator with Inflation · How to Calculate Debt to Income Ratio · Car Loan Calculator Australia</p>
+  </footer>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const price = $("price");
+    const downAmount = $("downAmount");
+    const downPercent = $("downPercent");
+    const principal = $("principal");
+    const rate = $("rate");
+    const years = $("years");
+    const extra = $("extra");
+    const status = $("status");
+    const results = $("results");
+    const savedCard = $("savedCard");
+    let syncing = false;
+
+    function num(el) {
+      const v = parseFloat(el.value);
+      return Number.isFinite(v) ? v : NaN;
+    }
+    function roundCents(x) {
+      return Math.round(x * 100) / 100;
+    }
+    function money(x) {
+      return x.toLocaleString("en-US", { style: "currency", currency: "USD" });
+    }
+    function setStatus(msg, kind) {
+      status.textContent = msg;
+      status.className = "status" + (kind ? " " + kind : "");
+    }
+    function scheduledPayment(P, annualRate, n) {
+      const r = annualRate / 12 / 100;
+      if (r === 0) return roundCents(P / n);
+      const factor = Math.pow(1 + r, n);
+      return roundCents(P * r * factor / (factor - 1));
+    }
+    function simulate(P, annualRate, n, monthly, extraPay) {
+      const r = annualRate / 12 / 100;
+      const pay = monthly + extraPay;
+      if (r > 0 && pay <= P * r) return null;
+      let bal = P;
+      let months = 0;
+      let totalPaid = 0;
+      const cap = n + 1;
+      while (bal > 0.005 && months < cap) {
+        const interest = r === 0 ? 0 : bal * r;
+        const principalPay = pay - interest;
+        if (principalPay >= bal) {
+          totalPaid += bal + interest;
+          months += 1;
+          bal = 0;
+          break;
+        }
+        if (principalPay <= 0) return null;
+        bal -= principalPay;
+        totalPaid += pay;
+        months += 1;
+      }
+      return { months: months, totalPaid: roundCents(totalPaid) };
+    }
+    function syncFrom(source) {
+      if (syncing) return;
+      syncing = true;
+      const p = num(price);
+      if (!(p >= 0)) { syncing = false; return; }
+      if (source === "percent") {
+        const pct = num(downPercent);
+        if (pct >= 0) {
+          downAmount.value = p ? roundCents(p * pct / 100) : 0;
+        }
+      } else if (source === "amount") {
+        const amt = num(downAmount);
+        if (amt >= 0) {
+          downPercent.value = p ? roundCents((amt / p) * 100) : 0;
+        }
+      } else if (source === "principal") {
+        const prin = num(principal);
+        if (prin >= 0) {
+          downAmount.value = roundCents(p - prin);
+          downPercent.value = p ? roundCents(((p - prin) / p) * 100) : 0;
+        }
+      } else if (source === "price") {
+        const amt = num(downAmount);
+        if (amt >= 0) {
+          downPercent.value = p ? roundCents((amt / p) * 100) : 0;
+        }
+      }
+      const amt = num(downAmount);
+      if (p >= 0 && amt >= 0 && source !== "principal") {
+        principal.value = roundCents(p - amt);
+      }
+      syncing = false;
+    }
+    function calculate() {
+      const P = num(principal);
+      const annual = num(rate);
+      const y = num(years);
+      const extraPay = num(extra) || 0;
+      if (!(P > 0)) { setStatus("Principal must be greater than zero.", "bad"); results.hidden = true; return; }
+      if (!(annual >= 0)) { setStatus("Annual rate must be zero or a positive percent.", "bad"); results.hidden = true; return; }
+      if (!(y > 0)) { setStatus("Term must be at least one year.", "bad"); results.hidden = true; return; }
+      if (extraPay < 0) { setStatus("Extra payment cannot be negative.", "bad"); results.hidden = true; return; }
+      const n = Math.round(y * 12);
+      const monthly = scheduledPayment(P, annual, n);
+      let totalPaid;
+      let months = n;
+      if (extraPay > 0) {
+        const sim = simulate(P, annual, n, monthly, extraPay);
+        if (!sim) {
+          setStatus("Payment does not cover monthly interest. Raise the payment or lower the rate.", "bad");
+          results.hidden = true;
+          return;
+        }
+        months = sim.months;
+        totalPaid = sim.totalPaid;
+      } else {
+        totalPaid = roundCents(monthly * n);
+      }
+      const totalInterest = roundCents(totalPaid - P);
+      $("outMonthly").textContent = money(monthly);
+      $("outTotal").textContent = money(totalPaid);
+      $("outInterest").textContent = money(totalInterest);
+      if (extraPay > 0) {
+        savedCard.hidden = false;
+        $("outSaved").textContent = String(n - months);
+      } else {
+        savedCard.hidden = true;
+      }
+      results.hidden = false;
+      setStatus("Principal and interest only. Taxes, insurance, HOA, and PMI are not included.", "ok");
+    }
+    ["price", "downAmount", "downPercent", "principal"].forEach((id) => {
+      $(id).addEventListener("input", (e) => {
+        const map = { price: "price", downAmount: "amount", downPercent: "percent", principal: "principal" };
+        syncFrom(map[id]);
+      });
+    });
+    $("calc").addEventListener("submit", (e) => { e.preventDefault(); calculate(); });
+    $("reset").addEventListener("click", () => {
+      price.value = "400000";
+      downAmount.value = "80000";
+      downPercent.value = "20";
+      principal.value = "320000";
+      rate.value = "6.5";
+      years.value = "30";
+      extra.value = "0";
+      calculate();
+      setStatus("EXAMPLE restored: $400,000 price, 20% down, 6.5% annual, 30 years.", "ok");
+    });
+    calculate();
+  </script>
+</body>
+</html>

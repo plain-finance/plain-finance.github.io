@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mortgage Calculator UAE — AED Payment Estimate</title>
+  <meta name="description" content="Estimate a UAE mortgage payment in AED. Reducing-balance principal and interest, 25-year term cap noted. Example rate only. Runs in your browser.">
+  <style>
+    :root { --bg:#10140f; --card:#1b221a; --ink:#eef6ea; --muted:#8eaa8a; --line:#2d3a2b; --acc:#6dbf6a; --ok:#6dbf6a; --bad:#e07a6a; --input:#0c100b; }
+    * { box-sizing: border-box; }
+    body { margin:0; font: 16px/1.5 ui-sans-serif, system-ui, sans-serif; background:var(--bg); color:var(--ink); }
+    header, main, footer { max-width: 920px; margin: 0 auto; padding: 1.25rem 1rem; }
+    h1 { font-size: 1.8rem; margin: .6rem 0 .35rem; }
+    .lede, footer, .muted { color: var(--muted); }
+    .card { display:block; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:1rem; color:var(--ink); text-decoration:none; }
+    .card:hover { border-color: var(--acc); }
+    .soon { opacity:.55; pointer-events:none; }
+    .card h2 { font-size:1.05rem; margin:0 0 .35rem; }
+    .card p { margin:0; color:var(--muted); font-size:.9rem; }
+    footer { font-size: .85rem; border-top:1px solid var(--line); }
+    header nav { font-size: .9rem; }
+    header nav a { color: var(--acc); text-decoration: none; margin-right: .9rem; }
+    .toolbar { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; margin: 0 0 .75rem; }
+    button { background: var(--card); color: var(--ink); border:1px solid var(--line); border-radius: 8px; padding: .45rem .8rem; cursor:pointer; font: inherit; }
+    button.primary { background: var(--acc); border-color: var(--acc); color:#071008; font-weight: 650; }
+    button:focus, input:focus, select:focus { outline: 2px solid var(--acc); outline-offset: 2px; }
+    label.field { display:flex; align-items:center; gap:.4rem; color:var(--muted); font-size:.9rem; }
+    label.field.stacked { flex-direction:column; align-items:stretch; gap:.35rem; }
+    .fields { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:.75rem; margin: 0 0 1rem; }
+    input, select { background:var(--input); color:var(--ink); border:1px solid var(--line); border-radius: 8px; padding: .5rem .65rem; font: 15px/1.4 ui-sans-serif, system-ui, sans-serif; width:100%; }
+    .status { min-height: 1.4em; font-size: .9rem; color: var(--muted); margin: .5rem 0 1.25rem; }
+    .status.ok { color: var(--ok); }
+    .status.bad { color: var(--bad); }
+    section { margin: 2rem 0; }
+    h2 { font-size: 1.15rem; }
+    .faq details { background: var(--card); border:1px solid var(--line); border-radius: 10px; padding: .7rem .9rem; margin: .5rem 0; }
+    .faq details summary { cursor:pointer; font-weight: 600; }
+    .faq details p { margin: .5rem 0 0; color: var(--muted); }
+    .example-label { display:inline-block; background:var(--card); border:1px dashed var(--line); color:var(--muted); font-size:.85rem; padding:.35rem .65rem; border-radius:8px; margin: 0 0 1rem; letter-spacing:.02em; }
+    .results { display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap:.75rem; margin: 1rem 0 1.25rem; }
+    .results .card strong { display:block; font-size:1.35rem; color:var(--acc); margin-top:.3rem; }
+    .formula { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:1rem 1.1rem; }
+    .formula p { margin: .4rem 0; }
+    .formula .eq { font: 15px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color:var(--ink); overflow-x:auto; }
+    .disclaimer { color: var(--muted); font-size:.9rem; border-left:3px solid var(--line); padding-left:.85rem; }
+    .queued { color: var(--muted); }
+    footer a, .related a { color: var(--acc); text-decoration: none; }
+    table.ltv { width:100%; border-collapse:collapse; font-size:.9rem; }
+    table.ltv th, table.ltv td { text-align:left; padding:.45rem .55rem; border-bottom:1px solid var(--line); }
+    table.ltv th { color:var(--ink); }
+    table.ltv td { color:var(--muted); }
+    .ltv-note { margin:.75rem 0 0; }
+    .related { display:flex; flex-wrap:wrap; gap:.75rem; }
+    .related a, .related span { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:.65rem .85rem; }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the maximum mortgage term in the UAE?",
+        "acceptedAnswer": {"@type": "Answer", "text": "The Central Bank of the UAE mortgage-loan regulations set a maximum tenor of 25 years. This calculator defaults to 25 years and warns if you enter a longer term. Confirm the live CBUAE rulebook before treating the cap as current."}
+      },
+      {
+        "@type": "Question",
+        "name": "What down payment does CBUAE require?",
+        "acceptedAnswer": {"@type": "Answer", "text": "CBUAE publishes loan-to-value caps rather than a single down-payment number. For a first completed home at AED 5 million or less, the published maximum LTV is 85% for UAE nationals and 80% for expatriates (15% or 20% down). Caps are lower above AED 5 million, on subsequent or investment property, and 50% LTV on off-plan purchases. Banks may lend less. Confirm the live rulebook."}
+      },
+      {
+        "@type": "Question",
+        "name": "Does this UAE mortgage calculator use current bank rates?",
+        "acceptedAnswer": {"@type": "Answer", "text": "No. The default annual rate is an EXAMPLE only. UAE lenders often quote a reducing rate linked to EIBOR plus a margin, and the quoted APR can include fees. Enter the rate your bank actually quotes. This page does not fetch live rates."}
+      },
+      {
+        "@type": "Question",
+        "name": "Is this the same as a reducing-balance EMI?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Yes. It uses standard monthly amortization: M = P × r(1+r)^n / ((1+r)^n − 1). That is reducing-balance principal and interest with a monthly rest. It is not a flat-rate quote, not an Islamic / Ijara product, and not a bank offer."}
+      },
+      {
+        "@type": "Question",
+        "name": "What is not included in this monthly payment?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Principal and interest only. It does not include Dubai Land Department or other registration fees, valuation, life or property insurance, early-settlement fees, or a debt-burden-ratio check. CBUAE consumer lending rules also cap aggregate monthly debt service; this page does not test that."}
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../">Plain Finance</a>
+      <a href="../how-to-calculate-mortgage-payments/">How to Calculate Mortgage Payments</a>
+    </nav>
+    <h1>Mortgage Calculator UAE</h1>
+    <p class="lede">Estimate a reducing-balance payment in AED. Principal and interest only. Nothing is uploaded. Not a bank quote.</p>
+  </header>
+  <main>
+    <p class="example-label">EXAMPLE inputs — AED 2,000,000 price, 20% down, 5.00% annual, 25 years. Not a current UAE market rate.</p>
+    <form id="calc" novalidate>
+      <div class="fields">
+        <label class="field stacked">Property price (AED)
+          <input id="price" name="price" type="number" min="0" step="1" value="2000000" inputmode="decimal">
+        </label>
+        <label class="field stacked">Buyer
+          <select id="buyer" name="buyer">
+            <option value="expat" selected>Expatriate</option>
+            <option value="national">UAE national</option>
+          </select>
+        </label>
+        <label class="field stacked">Property type
+          <select id="kind" name="kind">
+            <option value="first" selected>First completed home</option>
+            <option value="subsequent">Subsequent / investment</option>
+            <option value="offplan">Off-plan</option>
+          </select>
+        </label>
+        <label class="field stacked">Down payment amount (AED)
+          <input id="downAmount" name="downAmount" type="number" min="0" step="1" value="400000" inputmode="decimal">
+        </label>
+        <label class="field stacked">Down payment percent
+          <input id="downPercent" name="downPercent" type="number" min="0" max="100" step="0.01" value="20" inputmode="decimal">
+        </label>
+        <label class="field stacked">Principal (derived)
+          <input id="principal" name="principal" type="number" min="0" step="1" value="1600000" inputmode="decimal">
+        </label>
+        <label class="field stacked">Annual interest rate % (EXAMPLE)
+          <input id="rate" name="rate" type="number" min="0" step="0.001" value="5" inputmode="decimal">
+        </label>
+        <label class="field stacked">Term (years)
+          <input id="years" name="years" type="number" min="1" max="40" step="1" value="25" inputmode="numeric">
+        </label>
+        <label class="field stacked">Extra monthly payment (optional)
+          <input id="extra" name="extra" type="number" min="0" step="1" value="0" inputmode="decimal">
+        </label>
+      </div>
+      <div class="toolbar">
+        <button class="primary" type="submit">Calculate</button>
+        <button type="button" id="reset">Reset example</button>
+      </div>
+    </form>
+    <p class="status" id="status">EXAMPLE loaded. Calculate to see principal and interest in AED.</p>
+    <p class="muted" id="ltvStatus"></p>
+    <div class="results" id="results" hidden>
+      <div class="card">
+        <p>Monthly principal + interest</p>
+        <strong id="outMonthly">—</strong>
+      </div>
+      <div class="card">
+        <p>Total paid</p>
+        <strong id="outTotal">—</strong>
+      </div>
+      <div class="card">
+        <p>Total interest</p>
+        <strong id="outInterest">—</strong>
+      </div>
+      <div class="card" id="savedCard" hidden>
+        <p>Months saved with extra payment</p>
+        <strong id="outSaved">—</strong>
+      </div>
+    </div>
+    <section>
+      <h2>CBUAE loan-to-value caps</h2>
+      <p>The Central Bank of the UAE publishes LTV caps and a 25-year maximum tenor in its <a href="https://rulebook.centralbank.ae/en/rulebook/regulations-regarding-mortgage-loans">Regulations Regarding Mortgage Loans</a>. Confirm the live rulebook before treating a figure as current. Banks can be stricter. This table is a reading aid, not a credit decision.</p>
+      <table class="ltv">
+        <thead>
+          <tr><th>Borrower</th><th>Property</th><th>Max LTV</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>UAE national</td><td>First completed home, AED 5m or less</td><td>85%</td></tr>
+          <tr><td>UAE national</td><td>First completed home, above AED 5m</td><td>75%</td></tr>
+          <tr><td>UAE national</td><td>Subsequent / investment</td><td>65%</td></tr>
+          <tr><td>Expatriate</td><td>First completed home, AED 5m or less</td><td>80%</td></tr>
+          <tr><td>Expatriate</td><td>First completed home, above AED 5m</td><td>70%</td></tr>
+          <tr><td>Expatriate</td><td>Subsequent / investment</td><td>60%</td></tr>
+          <tr><td>All</td><td>Off-plan</td><td>50%</td></tr>
+        </tbody>
+      </table>
+      <p class="muted ltv-note">Source: CBUAE rulebook, Regulations Regarding Mortgage Loans. No current bank rate is quoted here.</p>
+    </section>
+    <section>
+      <h2>The formula</h2>
+      <div class="formula">
+        <p class="eq">M = P × r(1+r)<sup>n</sup> / ((1+r)<sup>n</sup> − 1)</p>
+        <p>M is the monthly principal-and-interest payment in AED. P is the loan principal (price minus down payment). r is the monthly rate: annual rate divided by 12, then by 100. n is years × 12.</p>
+        <p>If the annual rate is 0%, M is P divided by n.</p>
+        <p>EXAMPLE: AED 2,000,000 with 20% down leaves AED 1,600,000 of principal. At 5.00% annual for 25 years (n = 300), the scheduled payment is about AED 9,353 a month of principal and interest. That 5.00% is an EXAMPLE, not a quoted UAE rate.</p>
+      </div>
+    </section>
+    <section>
+      <h2>How to use it</h2>
+      <ol>
+        <li>Enter the property price in AED and choose buyer and property type so the published LTV cap can be shown.</li>
+        <li>Set the down payment. A warning appears if the implied LTV is above the published cap.</li>
+        <li>Enter the annual rate your bank quotes. Leave the EXAMPLE 5.00% only if you are checking the math.</li>
+        <li>Keep the term at 25 years or less unless you are only exploring the formula. CBUAE’s published maximum tenor is 25 years.</li>
+      </ol>
+      <p class="disclaimer">Educational estimate of principal and interest only. Not financial advice, not a bank offer, and not an Islamic finance product. Defaults are labeled EXAMPLE and are not a quoted market rate. Confirm CBUAE caps on the live rulebook. Does not include DLD or other registration fees, valuation, insurance, or a debt-burden-ratio test.</p>
+    </section>
+    <section>
+      <h2>Related calculators</h2>
+      <p class="related">
+        <a href="../how-to-calculate-mortgage-payments/">How to Calculate Mortgage Payments</a>
+        <span class="soon">Loan Against Property EMI Calculator (queued, not live)</span>
+        <span class="soon">Home Loan Balance Transfer Calculator (queued, not live)</span>
+      </p>
+    </section>
+    <section class="faq">
+      <h2>FAQ</h2>
+      <details>
+        <summary>What is the maximum mortgage term in the UAE?</summary>
+        <p>The Central Bank of the UAE mortgage-loan regulations set a maximum tenor of 25 years. This calculator defaults to 25 years and warns if you enter a longer term. Confirm the live CBUAE rulebook before treating the cap as current.</p>
+      </details>
+      <details>
+        <summary>What down payment does CBUAE require?</summary>
+        <p>CBUAE publishes loan-to-value caps rather than a single down-payment number. For a first completed home at AED 5 million or less, the published maximum LTV is 85% for UAE nationals and 80% for expatriates (15% or 20% down). Caps are lower above AED 5 million, on subsequent or investment property, and 50% LTV on off-plan purchases. Banks may lend less. Confirm the live rulebook.</p>
+      </details>
+      <details>
+        <summary>Does this UAE mortgage calculator use current bank rates?</summary>
+        <p>No. The default annual rate is an EXAMPLE only. UAE lenders often quote a reducing rate linked to EIBOR plus a margin, and the quoted APR can include fees. Enter the rate your bank actually quotes. This page does not fetch live rates.</p>
+      </details>
+      <details>
+        <summary>Is this the same as a reducing-balance EMI?</summary>
+        <p>Yes. It uses standard monthly amortization: M = P × r(1+r)^n / ((1+r)^n − 1). That is reducing-balance principal and interest with a monthly rest. It is not a flat-rate quote, not an Islamic / Ijara product, and not a bank offer.</p>
+      </details>
+      <details>
+        <summary>What is not included in this monthly payment?</summary>
+        <p>Principal and interest only. It does not include Dubai Land Department or other registration fees, valuation, life or property insurance, early-settlement fees, or a debt-burden-ratio check. CBUAE consumer lending rules also cap aggregate monthly debt service; this page does not test that.</p>
+      </details>
+    </section>
+  </main>
+  <footer>
+    <p><a href="../">Home</a> · Plain Finance · calculators only</p>
+    <p class="queued">Queued (not live yet): Loan Against Property EMI Calculator · Home Loan Balance Transfer Calculator · SIP Calculator with Inflation · How to Calculate Debt to Income Ratio · Car Loan Calculator Australia</p>
+  </footer>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const price = $("price");
+    const downAmount = $("downAmount");
+    const downPercent = $("downPercent");
+    const principal = $("principal");
+    const rate = $("rate");
+    const years = $("years");
+    const extra = $("extra");
+    const buyer = $("buyer");
+    const kind = $("kind");
+    const status = $("status");
+    const ltvStatus = $("ltvStatus");
+    const results = $("results");
+    const savedCard = $("savedCard");
+    let syncing = false;
+
+    function num(el) {
+      const v = parseFloat(el.value);
+      return Number.isFinite(v) ? v : NaN;
+    }
+    function roundCents(x) {
+      return Math.round(x * 100) / 100;
+    }
+    function money(x) {
+      return x.toLocaleString("en-AE", { style: "currency", currency: "AED" });
+    }
+    function setStatus(msg, kindCls) {
+      status.textContent = msg;
+      status.className = "status" + (kindCls ? " " + kindCls : "");
+    }
+    function publishedMaxLtv(buyerVal, kindVal, priceVal) {
+      if (kindVal === "offplan") return 50;
+      if (buyerVal === "national") {
+        if (kindVal === "subsequent") return 65;
+        return priceVal > 5000000 ? 75 : 85;
+      }
+      if (kindVal === "subsequent") return 60;
+      return priceVal > 5000000 ? 70 : 80;
+    }
+    function scheduledPayment(P, annualRate, n) {
+      const r = annualRate / 12 / 100;
+      if (r === 0) return roundCents(P / n);
+      const factor = Math.pow(1 + r, n);
+      return roundCents(P * r * factor / (factor - 1));
+    }
+    function simulate(P, annualRate, n, monthly, extraPay) {
+      const r = annualRate / 12 / 100;
+      const pay = monthly + extraPay;
+      if (r > 0 && pay <= P * r) return null;
+      let bal = P;
+      let months = 0;
+      let totalPaid = 0;
+      const cap = n + 1;
+      while (bal > 0.005 && months < cap) {
+        const interest = r === 0 ? 0 : bal * r;
+        const principalPay = pay - interest;
+        if (principalPay >= bal) {
+          totalPaid += bal + interest;
+          months += 1;
+          bal = 0;
+          break;
+        }
+        if (principalPay <= 0) return null;
+        bal -= principalPay;
+        totalPaid += pay;
+        months += 1;
+      }
+      return { months: months, totalPaid: roundCents(totalPaid) };
+    }
+    function syncFrom(source) {
+      if (syncing) return;
+      syncing = true;
+      const p = num(price);
+      if (!(p >= 0)) { syncing = false; return; }
+      if (source === "percent") {
+        const pct = num(downPercent);
+        if (pct >= 0) {
+          downAmount.value = p ? roundCents(p * pct / 100) : 0;
+        }
+      } else if (source === "amount") {
+        const amt = num(downAmount);
+        if (amt >= 0) {
+          downPercent.value = p ? roundCents((amt / p) * 100) : 0;
+        }
+      } else if (source === "principal") {
+        const prin = num(principal);
+        if (prin >= 0) {
+          downAmount.value = roundCents(p - prin);
+          downPercent.value = p ? roundCents(((p - prin) / p) * 100) : 0;
+        }
+      } else if (source === "price") {
+        const amt = num(downAmount);
+        if (amt >= 0) {
+          downPercent.value = p ? roundCents((amt / p) * 100) : 0;
+        }
+      }
+      const amt = num(downAmount);
+      if (p >= 0 && amt >= 0 && source !== "principal") {
+        principal.value = roundCents(p - amt);
+      }
+      syncing = false;
+    }
+    function updateLtvNote() {
+      const p = num(price);
+      const P = num(principal);
+      if (!(p > 0) || !(P >= 0)) {
+        ltvStatus.textContent = "";
+        return;
+      }
+      const ltv = roundCents((P / p) * 100);
+      const cap = publishedMaxLtv(buyer.value, kind.value, p);
+      const downPct = roundCents(100 - ltv);
+      let msg = "Implied LTV " + ltv + "% (down " + downPct + "%). Published CBUAE max for this selection is " + cap + "%.";
+      if (ltv > cap) {
+        msg += " Above the published cap — confirm the live rulebook and your bank. Calculation still runs.";
+      }
+      ltvStatus.textContent = msg;
+    }
+    function calculate() {
+      const P = num(principal);
+      const annual = num(rate);
+      const y = num(years);
+      const extraPay = num(extra) || 0;
+      updateLtvNote();
+      if (!(P > 0)) { setStatus("Principal must be greater than zero.", "bad"); results.hidden = true; return; }
+      if (!(annual >= 0)) { setStatus("Annual rate must be zero or a positive percent.", "bad"); results.hidden = true; return; }
+      if (!(y > 0)) { setStatus("Term must be at least one year.", "bad"); results.hidden = true; return; }
+      if (extraPay < 0) { setStatus("Extra payment cannot be negative.", "bad"); results.hidden = true; return; }
+      const n = Math.round(y * 12);
+      const monthly = scheduledPayment(P, annual, n);
+      let totalPaid;
+      let months = n;
+      if (extraPay > 0) {
+        const sim = simulate(P, annual, n, monthly, extraPay);
+        if (!sim) {
+          setStatus("Payment does not cover monthly interest. Raise the payment or lower the rate.", "bad");
+          results.hidden = true;
+          return;
+        }
+        months = sim.months;
+        totalPaid = sim.totalPaid;
+      } else {
+        totalPaid = roundCents(monthly * n);
+      }
+      const totalInterest = roundCents(totalPaid - P);
+      $("outMonthly").textContent = money(monthly);
+      $("outTotal").textContent = money(totalPaid);
+      $("outInterest").textContent = money(totalInterest);
+      if (extraPay > 0) {
+        savedCard.hidden = false;
+        $("outSaved").textContent = String(n - months);
+      } else {
+        savedCard.hidden = true;
+      }
+      results.hidden = false;
+      let msg = "Principal and interest only, EXAMPLE rate unless you typed a bank quote. DLD fees, insurance, and DBR are not included.";
+      if (y > 25) {
+        msg = "Term is above the published CBUAE 25-year maximum. " + msg;
+        setStatus(msg, "bad");
+      } else {
+        setStatus(msg, "ok");
+      }
+    }
+    ["price", "downAmount", "downPercent", "principal"].forEach((id) => {
+      $(id).addEventListener("input", () => {
+        const map = { price: "price", downAmount: "amount", downPercent: "percent", principal: "principal" };
+        syncFrom(map[id]);
+        updateLtvNote();
+      });
+    });
+    buyer.addEventListener("change", updateLtvNote);
+    kind.addEventListener("change", updateLtvNote);
+    $("calc").addEventListener("submit", (e) => { e.preventDefault(); calculate(); });
+    $("reset").addEventListener("click", () => {
+      price.value = "2000000";
+      buyer.value = "expat";
+      kind.value = "first";
+      downAmount.value = "400000";
+      downPercent.value = "20";
+      principal.value = "1600000";
+      rate.value = "5";
+      years.value = "25";
+      extra.value = "0";
+      calculate();
+      setStatus("EXAMPLE restored: AED 2,000,000, 20% down, 5.00% annual, 25 years. Not a market rate.", "ok");
+    });
+    calculate();
+  </script>
+</body>
+</html>

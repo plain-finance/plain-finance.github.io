@@ -5,54 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mortgage Calculator UAE — AED Payment Estimate</title>
   <meta name="description" content="Estimate a UAE mortgage payment in AED. Reducing-balance principal and interest, 25-year term cap noted. Example rate only. Runs in your browser.">
-  <style>
-    :root { --bg:#10140f; --card:#1b221a; --ink:#eef6ea; --muted:#8eaa8a; --line:#2d3a2b; --acc:#6dbf6a; --ok:#6dbf6a; --bad:#e07a6a; --input:#0c100b; }
-    * { box-sizing: border-box; }
-    body { margin:0; font: 16px/1.5 ui-sans-serif, system-ui, sans-serif; background:var(--bg); color:var(--ink); }
-    header, main, footer { max-width: 920px; margin: 0 auto; padding: 1.25rem 1rem; }
-    h1 { font-size: 1.8rem; margin: .6rem 0 .35rem; }
-    .lede, footer, .muted { color: var(--muted); }
-    .card { display:block; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:1rem; color:var(--ink); text-decoration:none; }
-    .card:hover { border-color: var(--acc); }
-    .soon { opacity:.55; pointer-events:none; }
-    .card h2 { font-size:1.05rem; margin:0 0 .35rem; }
-    .card p { margin:0; color:var(--muted); font-size:.9rem; }
-    footer { font-size: .85rem; border-top:1px solid var(--line); }
-    header nav { font-size: .9rem; }
-    header nav a { color: var(--acc); text-decoration: none; margin-right: .9rem; }
-    .toolbar { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; margin: 0 0 .75rem; }
-    button { background: var(--card); color: var(--ink); border:1px solid var(--line); border-radius: 8px; padding: .45rem .8rem; cursor:pointer; font: inherit; }
-    button.primary { background: var(--acc); border-color: var(--acc); color:#071008; font-weight: 650; }
-    button:focus, input:focus, select:focus { outline: 2px solid var(--acc); outline-offset: 2px; }
-    label.field { display:flex; align-items:center; gap:.4rem; color:var(--muted); font-size:.9rem; }
-    label.field.stacked { flex-direction:column; align-items:stretch; gap:.35rem; }
-    .fields { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:.75rem; margin: 0 0 1rem; }
-    input, select { background:var(--input); color:var(--ink); border:1px solid var(--line); border-radius: 8px; padding: .5rem .65rem; font: 15px/1.4 ui-sans-serif, system-ui, sans-serif; width:100%; }
-    .status { min-height: 1.4em; font-size: .9rem; color: var(--muted); margin: .5rem 0 1.25rem; }
-    .status.ok { color: var(--ok); }
-    .status.bad { color: var(--bad); }
-    section { margin: 2rem 0; }
-    h2 { font-size: 1.15rem; }
-    .faq details { background: var(--card); border:1px solid var(--line); border-radius: 10px; padding: .7rem .9rem; margin: .5rem 0; }
-    .faq details summary { cursor:pointer; font-weight: 600; }
-    .faq details p { margin: .5rem 0 0; color: var(--muted); }
-    .example-label { display:inline-block; background:var(--card); border:1px dashed var(--line); color:var(--muted); font-size:.85rem; padding:.35rem .65rem; border-radius:8px; margin: 0 0 1rem; letter-spacing:.02em; }
-    .results { display:grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap:.75rem; margin: 1rem 0 1.25rem; }
-    .results .card strong { display:block; font-size:1.35rem; color:var(--acc); margin-top:.3rem; }
-    .formula { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:1rem 1.1rem; }
-    .formula p { margin: .4rem 0; }
-    .formula .eq { font: 15px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color:var(--ink); overflow-x:auto; }
-    .disclaimer { color: var(--muted); font-size:.9rem; border-left:3px solid var(--line); padding-left:.85rem; }
-    .queued { color: var(--muted); }
-    footer a, .related a { color: var(--acc); text-decoration: none; }
-    table.ltv { width:100%; border-collapse:collapse; font-size:.9rem; }
-    table.ltv th, table.ltv td { text-align:left; padding:.45rem .55rem; border-bottom:1px solid var(--line); }
-    table.ltv th { color:var(--ink); }
-    table.ltv td { color:var(--muted); }
-    .ltv-note { margin:.75rem 0 0; }
-    .related { display:flex; flex-wrap:wrap; gap:.75rem; }
-    .related a, .related span { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:.65rem .85rem; }
-  </style>
+  <link rel="canonical" href="https://finance.plaintools.vip/mortgage-calculator-uae/">
+  <link rel="stylesheet" href="/assets/style.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -88,11 +42,17 @@
   </script>
 </head>
 <body>
+  <div class="site-top">
+    <div class="site-top-inner">
+      <a class="brand" href="/">plaintools<span>.finance</span></a>
+      <nav class="nav">
+        <a href="https://plaintools.vip/">Tools</a>
+        <a href="/">Finance</a>
+        <a href="https://compare.plaintools.vip/">Compare</a>
+      </nav>
+    </div>
+  </div>
   <header>
-    <nav>
-      <a href="../">Plain Finance</a>
-      <a href="../how-to-calculate-mortgage-payments/">How to Calculate Mortgage Payments</a>
-    </nav>
     <h1>Mortgage Calculator UAE</h1>
     <p class="lede">Estimate a reducing-balance payment in AED. Principal and interest only. Nothing is uploaded. Not a bank quote.</p>
   </header>
@@ -231,8 +191,11 @@
     </section>
   </main>
   <footer>
-    <p><a href="../">Home</a> · Plain Finance · calculators only</p>
+    <a href="https://plaintools.vip/">Tools</a> ·
+    <a href="/">Finance</a> ·
+    <a href="https://compare.plaintools.vip/">Compare</a>
     <p class="queued">Queued (not live yet): Loan Against Property EMI Calculator · Home Loan Balance Transfer Calculator · SIP Calculator with Inflation · How to Calculate Debt to Income Ratio · Car Loan Calculator Australia</p>
+    <p class="disclosure">Educational estimate of principal and interest only. Defaults labeled EXAMPLE are not quoted market rates. Not financial advice. Not a bank offer.</p>
   </footer>
   <script>
     const $ = (id) => document.getElementById(id);

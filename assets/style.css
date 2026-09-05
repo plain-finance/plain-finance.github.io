@@ -214,6 +214,7 @@ button {
   padding: 0.55rem 0.95rem;
   cursor: pointer;
   font-size: 0.92rem;
+  min-height: 44px;
   font-weight: 500;
 }
 button.primary {
@@ -295,16 +296,17 @@ select {
 }
 
 .example-label {
-  display: inline-block;
-  background: var(--acc-soft);
-  border: 1px solid var(--acc-border);
+  display: block;
+  background: transparent;
+  border: none;
   color: var(--muted);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-family: var(--sans);
-  padding: 0.35rem 0.65rem;
-  border-radius: 8px;
-  margin: 0 0 1rem;
-  letter-spacing: 0.02em;
+  padding: 0;
+  margin: 0 0 0.85rem;
+  letter-spacing: 0.01em;
+  line-height: 1.45;
+  max-width: 42rem;
 }
 
 .results {
@@ -435,6 +437,94 @@ footer a {
 }
 footer a:hover { color: var(--ink); }
 
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: 0.25rem 0 1rem;
+  font-family: var(--sans);
+}
+
+.btn {
+  font-family: var(--sans);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  background: var(--acc);
+  color: var(--acc-ink) !important;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  padding: 0.7rem 1.1rem;
+  border: 1px solid transparent;
+  min-height: 44px;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.btn:hover {
+  background: #4338ca;
+  color: var(--acc-ink) !important;
+}
+.btn.ghost {
+  background: transparent;
+  color: var(--ink) !important;
+  border: 1px solid var(--line);
+}
+.btn.ghost:hover {
+  background: #f8fafc;
+  color: var(--ink) !important;
+  border-color: #cbd5e1;
+}
+
+.proof-strip,
+.chips {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  font-family: var(--sans);
+}
+.proof-strip li,
+.chips li {
+  background: var(--acc-soft);
+  border: 1px solid var(--acc-border);
+  color: #3730a3;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.28rem 0.6rem;
+  border-radius: 999px;
+  letter-spacing: 0.01em;
+}
+
+.cta-note {
+  font-family: var(--sans);
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0.35rem 0 0.75rem;
+  max-width: 42rem;
+  line-height: 1.45;
+}
+
+.results-label {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0 0 0.5rem;
+}
+
+.tool-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin: 0 0 0.75rem;
+}
+
 @media (max-width: 640px) {
   .nav a:nth-child(n+4) { display: none; }
+  .hero-actions .btn { flex: 1 1 auto; min-width: 9.5rem; }
+  .toolbar button { min-height: 44px; }
 }
+

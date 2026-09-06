@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://finance.plaintools.vip/sitemap.xml
